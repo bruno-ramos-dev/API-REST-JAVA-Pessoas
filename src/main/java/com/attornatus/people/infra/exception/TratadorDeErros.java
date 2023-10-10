@@ -3,7 +3,7 @@ package com.attornatus.people.infra.exception;
 import com.attornatus.people.domain.ValidacaoException;
 import jakarta.persistence.EntityNotFoundException;
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
@@ -16,7 +16,8 @@ public class TratadorDeErros {
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity tratarErro404() {
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DadosErroValidacao("Erro", "Pessoa não encontrada no banco de dados"));
+//        return ResponseEntity.notFound().build();
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

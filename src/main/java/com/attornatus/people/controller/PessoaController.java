@@ -1,9 +1,6 @@
 package com.attornatus.people.controller;
 
-import com.attornatus.people.domain.pessoa.DadosCriacaoPessoa;
-import com.attornatus.people.domain.pessoa.DadosDetalhamentoPessoa;
-import com.attornatus.people.domain.pessoa.Pessoa;
-import com.attornatus.people.domain.pessoa.PessoaRepository;
+import com.attornatus.people.domain.pessoa.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RestController
 @RequestMapping("/pessoas")
 public class PessoaController {
-
-    @GetMapping
-    public String teste0001() {
-        return "Teste";
-    }
 
     @Autowired
     private PessoaRepository repository;
@@ -33,5 +25,14 @@ public class PessoaController {
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoPessoa(pessoa));
 
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity editar(@RequestBody @Valid DadosEdicaoPessoa dados) {
+        var pessoa = repository.getReferenceById(dados.id());
+        pessoa.atualizarInformacoes(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoPessoa(pessoa));
     }
 }
