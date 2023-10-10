@@ -10,6 +10,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 @RestControllerAdvice
 public class TratadorDeErros {
@@ -39,6 +40,11 @@ public class TratadorDeErros {
     @ExceptionHandler(JdbcSQLIntegrityConstraintViolationException.class)
     public ResponseEntity tratarErroEmailUnico(JdbcSQLIntegrityConstraintViolationException ex) {
         return ResponseEntity.badRequest().body(new DadosErroValidacao("Erro", "Email já cadastrado no banco de dados"));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity tratarErroTipoIdInvalido() {
+        return ResponseEntity.badRequest().body(new DadosErroValidacao("Erro", "O Id deve ser um número"));
     }
 
     private record DadosErroValidacao(String campo, String mensagem) {

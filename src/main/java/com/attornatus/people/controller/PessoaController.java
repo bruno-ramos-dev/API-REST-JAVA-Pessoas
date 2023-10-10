@@ -35,4 +35,10 @@ public class PessoaController {
 
         return ResponseEntity.ok(new DadosDetalhamentoPessoa(pessoa));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity consultar(@PathVariable Long id) {
+        var pessoa = repository.getReferenceById(id);
+        return ResponseEntity.ok(new DadosDetalhamentoPessoa(pessoa));
+    }
 }
