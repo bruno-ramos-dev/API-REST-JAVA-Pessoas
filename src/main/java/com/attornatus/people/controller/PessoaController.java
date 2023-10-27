@@ -3,6 +3,9 @@ package com.attornatus.people.controller;
 import com.attornatus.people.domain.pessoa.*;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +43,11 @@ public class PessoaController {
     public ResponseEntity consultar(@PathVariable Long id) {
         var pessoa = repository.getReferenceById(id);
         return ResponseEntity.ok(new DadosDetalhamentoPessoa(pessoa));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemPessoa>> listar(@PageableDefault(size = 5, sort = {"nome"}) Pageable paginacao) {
+        var page = repository.findAll(paginacao).map(DadosListagemPessoa::new);
+        return ResponseEntity.ok(page);
     }
 }
